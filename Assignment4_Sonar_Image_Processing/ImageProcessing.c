@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int **OriginalMatrix(int n)
 {
     int **matrix = (int **)malloc(n * sizeof(int *)); // rows
     for (int i = 0; i < n; i++)
     {
-        *(matrix + i) = (int *)malloc(n * sizeof(int *)); // columns
+        *(matrix + i) = (int *)malloc(n * sizeof(int)); // columns
     }
     return matrix;
 }
@@ -70,22 +71,18 @@ void rotatedMatrix(int **matrix, int n)
 
 void smoothing(int **matrix, int n)
 {
-    int *temp = (int *)malloc(n * n * sizeof(int));
 
+    int **temp = (int **)malloc(n * sizeof(int *));
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
-        {
-            *(temp + i * n + j) = *(*(matrix + i) + j);
-        }
+        *(temp + i) = (int *)malloc(n * sizeof(int));
     }
 
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
-            int sum = 0;
-            int count = 0;
+            int sum = 0, count = 0;
 
             for (int neighbourOfI = i - 1; neighbourOfI <= i + 1; neighbourOfI++)
             {
@@ -93,28 +90,46 @@ void smoothing(int **matrix, int n)
                 {
                     if (neighbourOfI >= 0 && neighbourOfI < n && neighbourOfJ >= 0 && neighbourOfJ < n)
                     {
-                        sum += *(temp + neighbourOfI * n + neighbourOfJ);
+                        sum += *(*(matrix + neighbourOfI) + neighbourOfJ);
                         count++;
                     }
                 }
             }
-            int average = sum / count;
-            *(*(matrix + i) + j) = average;
+
+            *(*(temp + i) + j) = sum / count;
         }
     }
+
+    // Copy to original
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            *(*(matrix + i) + j) = *(*(temp + i) + j);
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        free(*(temp + i));
+    }
+    free(temp);
 }
 
 int main()
 {
     int n;
-    printf("Enter the size of the matrix: ");
-    scanf("%d", &n);
-
-    if (n > 2 || n < 10)
+    srand(time(NULL) + clock());
+    do
     {
-        printf("Please enter a valid size between 2 and 10\n");
-        return 1;
-    }
+        printf("Enter the size of the matrix (between 2 and 10): ");
+        scanf("%d", &n);
+
+        if (n < 2 || n > 10)
+        {
+            printf("Invalid size. Please enter a valid size between 2 and 10.\n");
+        }
+    } while (n < 2 || n > 10);
 
     int **matrix = OriginalMatrix(n);
     RandomMatrix(matrix, n);
@@ -131,6 +146,13 @@ int main()
 
     printf("The value after smoothing is: \n");
     PrintMatrix(matrix, n);
+
+    // Add this before return 0; in main()
+    for (int i = 0; i < n; i++)
+    {
+        free(matrix[i]);
+    }
+    free(matrix);
 
     return 0;
 }
