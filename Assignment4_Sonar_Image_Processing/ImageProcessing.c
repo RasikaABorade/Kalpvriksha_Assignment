@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include <time.h>
 
-int **OriginalMatrix(int n)
+int **originalMatrix(int n)
 {
-    int **matrix = (int **)malloc(n * sizeof(int *)); // rows
+    int **matrix = malloc(n * sizeof(int *));
     for (int i = 0; i < n; i++)
     {
-        *(matrix + i) = (int *)malloc(n * sizeof(int)); // columns
+        *(matrix + i) = (int *)malloc(n * sizeof(int));
     }
     return matrix;
 }
 
-void RandomMatrix(int **matrix, int n)
+void randomMatrix(int **matrix, int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -23,7 +23,7 @@ void RandomMatrix(int **matrix, int n)
     }
 }
 
-void PrintMatrix(int **matrix, int n)
+void printMatrix(int **matrix, int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -52,11 +52,10 @@ void rotatedMatrix(int **matrix, int n)
         }
     }
 
-    // reverse
     for (int i = 0; i < n; i++)
     {
-        int *left = *(matrix + i);            // start
-        int *right = *(matrix + i) + (n - 1); // end of matrix
+        int *left = *(matrix + i);
+        int *right = *(matrix + i) + (n - 1);
 
         while (left < right)
         {
@@ -100,7 +99,6 @@ void smoothing(int **matrix, int n)
         }
     }
 
-    // Copy to original
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -131,23 +129,22 @@ int main()
         }
     } while (n < 2 || n > 10);
 
-    int **matrix = OriginalMatrix(n);
-    RandomMatrix(matrix, n);
+    int **matrix = originalMatrix(n);
+    randomMatrix(matrix, n);
 
     printf("The original matrix is: \n");
-    PrintMatrix(matrix, n);
+    printMatrix(matrix, n);
 
     rotatedMatrix(matrix, n);
 
     printf("90 degree rotated matrix is: \n");
-    PrintMatrix(matrix, n);
+    printMatrix(matrix, n);
 
     smoothing(matrix, n);
 
     printf("The value after smoothing is: \n");
-    PrintMatrix(matrix, n);
+    printMatrix(matrix, n);
 
-    // Add this before return 0; in main()
     for (int i = 0; i < n; i++)
     {
         free(matrix[i]);
