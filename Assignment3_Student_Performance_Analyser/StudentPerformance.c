@@ -1,7 +1,4 @@
 #include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
 
 typedef struct
 {
@@ -37,23 +34,24 @@ StudentGrades getGrade(float average)
     else if (average >= 70)
     {
         grades.grade = 'B';
-        grades.star = 5;
+        grades.star = 4;
     }
     else if (average >= 50)
     {
         grades.grade = 'C';
-        grades.star = 5;
+        grades.star = 3;
     }
     else if (average >= 35)
     {
         grades.grade = 'D';
-        grades.star = 5;
+        grades.star = 2;
     }
     else
     {
         grades.grade = 'F';
         grades.star = 0;
     }
+    return grades;
 }
 
 int main()
@@ -72,7 +70,16 @@ int main()
 
         for (int j = 0; j < 3; j++)
         {
-            scanf("%d", &student[index].marks[j]);
+            do
+            {
+                printf("Enter marks %d (0 to 100): ", j + 1);
+                scanf("%d", &student[index].marks[j]);
+
+                if (student[index].marks[j] < 0 || student[index].marks[j] > 100)
+                {
+                    printf("Invalid marks entered , please try between 0 and 100. \n");
+                }
+            } while (student[index].marks[j] < 0 || student[index].marks[j] > 100);
         }
     }
 
