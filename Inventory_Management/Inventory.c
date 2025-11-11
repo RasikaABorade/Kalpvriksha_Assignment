@@ -21,8 +21,16 @@ void deleteProduct(Product **inventory, int *totalProducts);
 int main()
 {
     int totalProducts;
-    printf("Enter the initial Number of Products: ");
-    scanf("%d", &totalProducts);
+    do
+    {
+        printf("Enter the initial Number of Products (1 to 100): ");
+        scanf("%d", &totalProducts);
+
+        if (totalProducts < 1 || totalProducts > 100)
+        {
+            printf("Invalid number! Please enter between 1 and 100.\n");
+        }
+    } while (totalProducts < 1 || totalProducts > 100);
 
     Product *inventory = (Product *)calloc(totalProducts, sizeof(Product));
 
