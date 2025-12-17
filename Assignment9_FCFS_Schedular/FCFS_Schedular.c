@@ -462,7 +462,7 @@ void printResults()
         else
             printf("Status: COMPLETED\n");
 
-        printf("-------------------------------------------\n");
+        printf("----------------\n");
     }
 }
 
